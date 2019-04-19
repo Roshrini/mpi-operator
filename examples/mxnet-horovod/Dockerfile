@@ -85,7 +85,7 @@ RUN cat /etc/ssh/ssh_config | grep -v StrictHostKeyChecking > /etc/ssh/ssh_confi
 # Other packages needed for running MXNet-horovod distributed training examples
 RUN pip install gluoncv
 
-# Clone Horovod source and override examples
+# Clone Horovod source to run examples
 RUN git clone -b v0.16.1 https://github.com/horovod/horovod/
 
 WORKDIR "/"

@@ -42,7 +42,7 @@ spec:
         - --batch-size
         - "64"
         - --epochs
-        - "10"
+        - "20"
         image: mpioperator/mxnet-horovod:latest
         name: mxnet-mnist-horovod-job
         resources:
