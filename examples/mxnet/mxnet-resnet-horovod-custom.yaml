@@ -1,0 +1,51 @@
+apiVersion: kubeflow.org/v1alpha1
+kind: MPIJob
+metadata:
+  labels:
+    ksonnet.io/component: mxnet-resnet-horovod-job
+  name: mxnet-resnet-horovod-job
+  namespace: default
+spec:
+  replicas: 2
+  template:
+    spec:
+      containers:
+      - command:
+        - mpirun
+        - -mca
+        - btl_tcp_if_exclude
+        - lo
+        - -mca
+        - pml
+        - ob1
+        - -mca
+        - btl
+        - ^openib
+        - --bind-to
+        - none
+        - -map-by
+        - slot
+        - -x
+        - LD_LIBRARY_PATH
+        - -x
+        - PATH
+        - -x
+        - NCCL_SOCKET_IFNAME=eth0
+        - -x
+        - NCCL_DEBUG=INFO
+        - -x
+        - MXNET_CUDNN_AUTOTUNE_DEFAULT=0
+        - python
+        - /horovod/examples/mxnet_imagenet_resnet50.py
+        - --save-frequency
+        - "1"
+        - --batch-size
+        - "64"
+        - --num-epochs
+        - "5"
+        image: <AWS_ACCOUNTID>.dkr.ecr.<AWS_REGION>.amazonaws.com/mxnet-horovod:latest
+        name: mxnet-resnet-horovod-job
+        resources:
+          limits:
+            nvidia.com/gpu: 4
+      restartPolicy: Never
